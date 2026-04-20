@@ -1,0 +1,20 @@
+Available routes:
+  /
+  /chat/<int:partner_id>
+  /dashboard
+  /dashboard/mentee
+  /dashboard/mentor
+  /login
+  /logout
+  /media/profile/<path:filename>
+  /payment/<int:mentor_id>
+  /profile
+  /register
+  /requests/<int:mentor_id>/send
+  /requests/<int:request_id>/accept
+  /requests/<int:request_id>/decline
+  /static/<path:filename>
+  /test
+  /uploads/<path:filename>
+ * Serving Flask app 'app'
+ * Debug mode: off
