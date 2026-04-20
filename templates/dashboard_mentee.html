@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Mentee Dashboard | MentorLink{% endblock %}
+{% block content %}
+<section class="dashboard-hero glass-panel">
+  <div><span class="eyebrow-pill">Mentee dashboard</span><h1>Your mentor recommendations</h1><p>Send mentorship requests, track status, and unlock chat only after approval and payment when needed.</p></div>
+  <div class="quick-action-row"><a class="button ghost" href="{{ url_for('profile') }}">Edit Profile</a><a class="button" href="#recommendations">Browse Matches</a></div>
+</section>
+<section class="stats-grid">
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Conversations</span><strong class="stats-number">{{ conversations|length }}</strong></div><p>Unlocked mentor chats</p></article>
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Requests</span><strong class="stats-number">{{ sent_requests|length }}</strong></div><p>Mentorship requests sent</p></article>
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Top focus</span><strong class="stats-value">{{ g.user.interests.split(',')[0].strip() if g.user.interests else 'Add interests' }}</strong></div><p>Improve matching with better profile data</p></article>
+</section>
+<section class="dashboard-grid">
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Profile snapshot</h2><a class="text-link" href="{{ url_for('profile') }}">Update</a></div><div class="info-stack"><p><strong>Interests</strong><span>{{ g.user.interests or 'Add interests to improve matching.' }}</span></p><p><strong>Goals</strong><span>{{ g.user.goals or 'Add goals to improve matching.' }}</span></p><p><strong>Bio</strong><span>{{ g.user.bio or 'Add a short bio to help mentors understand your needs.' }}</span></p></div></article>
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Recent request statuses</h2><span class="section-badge">Tracked</span></div>{% if sent_requests %}<div class="conversation-list">{% for req in sent_requests[:5] %}<div class="conversation-item"><div><strong>{{ req.mentor_name }}</strong><span>{{ req.topic }}</span></div><span class="status-badge {{ req.status }}">{{ req.status|title }}</span></div>{% endfor %}</div>{% else %}<p class="empty-state">No requests yet. Send one from the mentor cards below.</p>{% endif %}</article>
+</section>
+<section class="section-block" id="recommendations">
+  <div class="section-heading left-align"><span class="eyebrow">Recommended mentors</span><h2>Best matches for your goals</h2></div>
+  <div class="mentor-card-grid">
+    {% for item in recommendations %}
+      {% set percent = 35 + (item.score * 15) %}
+      {% if percent > 98 %}{% set percent = 98 %}{% endif %}
+      <article class="mentor-match-card glass-panel">
+        <div class="match-top-row"><div class="mentor-title-wrap"><div class="profile-avatar">{% if item.mentor.profile_image_path %}<img src="{{ url_for('profile_media', filename=item.mentor.profile_image_path) }}" alt="{{ item.mentor.name }}">{% else %}<span>{{ item.mentor.name[:1] }}</span>{% endif %}</div><div><h3>{{ item.mentor.name }}</h3><p class="muted-copy">{{ item.mentor.headline or 'Mentor profile' }}</p></div></div><div class="match-circle"><strong>{{ percent }}%</strong><span>match</span></div></div>
+        <div class="tag-row"><span class="status-badge {{ item.mentor.membership_type }}">{{ item.mentor.membership_type|title }}</span><span class="status-badge {{ item.access.status }}">{{ item.access.label }}</span>{% if item.mentor.membership_type == 'premium' %}<span class="tag-chip alt">Rs. {{ item.mentor.price }}</span>{% endif %}</div>
+        <p class="card-copy">{{ item.mentor.bio or 'No bio added yet.' }}</p>
+        <div class="tag-row">{% if item.overlap %}{% for tag in item.overlap[:4] %}<span class="tag-chip">{{ tag }}</span>{% endfor %}{% else %}<span class="tag-chip muted">Potential fit</span>{% endif %}{% if item.mentor.skills %}{% for skill in item.mentor.skills.split(',')[:3] %}<span class="tag-chip alt">{{ skill.strip() }}</span>{% endfor %}{% endif %}</div>
+        <details class="mentor-card-body mentor-details"><summary class="mentor-details-toggle">View Mentor Profile</summary><div class="card-detail-list structured-details"><p><strong>Skills</strong><span>{{ item.mentor.skills or 'Not specified' }}</span></p><p><strong>Experience</strong><span>{{ item.mentor.experience or 'Not specified' }}</span></p><p><strong>Access</strong><span>{{ item.mentor.membership_description or 'Mentorship request approval required.' }}</span></p></div></details>
+        <div class="mentor-card-action">
+        {% if item.access.can_chat %}
+          <a class="button full-width" href="{{ url_for('chat', partner_id=item.mentor.id) }}">Start Chat</a>
+        {% elif item.access.needs_payment %}
+          <a class="button full-width" href="{{ url_for('payment', mentor_id=item.mentor.id) }}">Proceed to Payment</a>
+        {% elif item.access.status == 'pending' %}
+          <button class="button ghost full-width" type="button">Request Pending</button>
+        {% elif item.access.status == 'declined' %}
+          <form class="request-form" method="post" action="{{ url_for('send_request', mentor_id=item.mentor.id) }}">
+            <input type="text" name="topic" placeholder="New topic or goal" required>
+            <textarea name="request_message" rows="3" placeholder="Explain why you want guidance from this mentor" required></textarea>
+            <button class="button full-width" type="submit">Send New Request</button>
+          </form>
+        {% else %}
+          <form class="request-form" method="post" action="{{ url_for('send_request', mentor_id=item.mentor.id) }}">
+            <input type="text" name="topic" placeholder="Topic or goal" required>
+            <textarea name="request_message" rows="3" placeholder="Write a short mentorship request" required></textarea>
+            <button class="button full-width" type="submit">Send Mentorship Request</button>
+          </form>
+        {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

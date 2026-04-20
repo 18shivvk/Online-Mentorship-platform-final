@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MentorLink{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("mentorlink-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <div class="site-bg"></div>
+  <div class="page-shell">
+    <header class="site-header glass-panel">
+      <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">M</span><span>MentorLink</span></a>
+      <nav class="site-nav">
+        <a href="{{ url_for('index') }}">Home</a>
+        {% if g.user %}
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('profile') }}">Profile</a>
+          <a class="button ghost small" href="{{ url_for('register') }}">Register</a>
+          <a class="button ghost small" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a class="button ghost small" href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle theme">Dark Mode Off</button>
+      </nav>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <section class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
+    <main class="main-content">{% block content %}{% endblock %}</main>
+    <footer class="site-footer glass-panel">
+      <div>
+        <h3>MentorLink</h3>
+        <p>Professional mentorship discovery, matching, and guided conversations for learners and mentors.</p>
+      </div>
+      <div class="footer-links">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('register') }}">Get Started</a>
+        <a href="{{ url_for('login') }}">Login</a>
+      </div>
+    </footer>
+    <section class="footer-contact-panel glass-panel">
+      <div class="footer-contact-copy">
+        <span class="eyebrow">Connect With MentorLink</span>
+        <h2>Share feedback or reach the MentorLink team</h2>
+        <p>If you want to report an issue, suggest a feature, or talk to the MentorLink team, use the details here.</p>
+        <div class="footer-contact-links">
+          <a class="button" href="mailto:team@mentorlink.com?subject=MentorLink%20Feedback">Email MentorLink Team</a>
+          <a class="button ghost" href="mailto:support@mentorlink.com?subject=Need%20Help%20With%20MentorLink">Contact Support</a>
+        </div>
+      </div>
+      <form class="footer-feedback-form" action="mailto:team@mentorlink.com" method="post" enctype="text/plain">
+        <div>
+          <label class="field-label" for="feedback-name">Name</label>
+          <div class="input-shell">
+            <span class="input-icon">*</span>
+            <input id="feedback-name" type="text" name="name" placeholder="Your name">
+          </div>
+        </div>
+        <div>
+          <label class="field-label" for="feedback-email">Email</label>
+          <div class="input-shell">
+            <span class="input-icon">@</span>
+            <input id="feedback-email" type="email" name="email" placeholder="Your email">
+          </div>
+        </div>
+        <div class="col-span-2">
+          <label class="field-label" for="feedback-message">Feedback Message</label>
+          <div class="input-shell">
+            <textarea id="feedback-message" name="message" rows="5" placeholder="Tell the MentorLink team what you want to share"></textarea>
+          </div>
+        </div>
+        <div class="col-span-2 footer-feedback-actions">
+          <button class="button" type="submit">Send Feedback</button>
+          <span class="field-help">This opens your email app with the feedback details.</span>
+        </div>
+      </form>
+    </section>
+  </div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}MentorLink | Online Mentorship Platform{% endblock %}
+{% block content %}
+<section class="hero-section">
+  <div class="hero-copy">
+    <span class="eyebrow-pill">Modern mentorship platform</span>
+    <h1>Connect with industry mentors. Learn, grow, and achieve your goals.</h1>
+    <p class="hero-subtitle">MentorLink helps mentees discover relevant mentors, build stronger profiles, and move from first match to meaningful guidance through simple one-to-one chat.</p>
+    <div class="hero-actions">
+      <a class="button" href="{{ url_for('register') }}">Find a Mentor</a>
+      <a class="button ghost" href="{{ url_for('register') }}">Become a Mentor</a>
+    </div>
+    <div class="hero-stats">
+      <div class="metric-card"><strong>Smart matching</strong><span>Recommendations based on goals, interests, and expertise.</span></div>
+      <div class="metric-card"><strong>Direct messaging</strong><span>Persistent conversation history for ongoing mentorship.</span></div>
+    </div>
+  </div>
+  <div class="hero-panel glass-panel">
+    <div class="hero-orbit hero-orbit-one"></div>
+    <div class="hero-orbit hero-orbit-two"></div>
+    <div class="hero-preview-card">
+      <p class="mini-label">Live experience</p>
+      <h2>From sign-up to first mentorship conversation in minutes.</h2>
+      <ul class="check-list">
+        <li>Create a mentor or mentee profile</li>
+        <li>Get matched with relevant expertise</li>
+        <li>Start focused one-to-one chat</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section class="section-block">
+  <div class="section-heading"><span class="eyebrow">How it works</span><h2>Simple flow, better outcomes</h2></div>
+  <div class="steps-grid">
+    <article class="feature-card step-card"><span class="step-number">01</span><h3>Register</h3><p>Create your account as a mentor or mentee and complete your profile with relevant details.</p></article>
+    <article class="feature-card step-card"><span class="step-number">02</span><h3>Get matched</h3><p>Receive mentor suggestions based on shared interests, goals, and expertise.</p></article>
+    <article class="feature-card step-card"><span class="step-number">03</span><h3>Start chat</h3><p>Use direct chat to ask questions, share progress, and continue the mentorship journey.</p></article>
+  </div>
+</section>
+<section class="section-block">
+  <div class="section-heading"><span class="eyebrow">Platform features</span><h2>Built for structured mentorship</h2></div>
+  <div class="features-grid">
+    <article class="feature-card"><div class="icon-chip">MM</div><h3>Mentor matching</h3><p>Ranked mentor recommendations help mentees find the most relevant guidance faster.</p></article>
+    <article class="feature-card"><div class="icon-chip">CS</div><h3>Chat system</h3><p>Clear one-to-one conversations keep advice organized and easy to continue over time.</p></article>
+    <article class="feature-card"><div class="icon-chip">PS</div><h3>Profile system</h3><p>Rich mentor and mentee profiles make matching more useful and communication more personal.</p></article>
+  </div>
+</section>
+{% endblock %}

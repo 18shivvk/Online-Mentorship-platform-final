@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Chat | MentorLink{% endblock %}
+{% block content %}
+<section class="chat-header glass-panel">
+  <div><span class="eyebrow-pill">Direct chat</span><h1>{{ partner.name }}</h1><p>{{ partner.headline or partner.role|title }}</p></div>
+  <div class="quick-action-row"><a class="button ghost" href="{{ url_for('dashboard') }}">Back to Dashboard</a>{% if access.needs_payment and g.user.role == 'mentee' %}<a class="button" href="{{ url_for('payment', mentor_id=access.mentor_id) }}">Proceed to Payment</a>{% endif %}</div>
+</section>
+{% if not access.can_chat %}
+<section class="panel-card glass-panel lock-box">
+  <h2>Chat Locked</h2>
+  {% if not access.request %}
+    <p>You need mentor approval before chat access. Send a mentorship request from the mentee dashboard first.</p>
+  {% elif access.status == 'pending' %}
+    <p>Your mentorship request is pending. Chat will unlock after the mentor accepts it.</p>
+  {% elif access.status == 'declined' %}
+    <p>Your mentorship request was declined. Send a new request from the dashboard if you want to try again.</p>
+  {% elif access.needs_payment and g.user.role == 'mentee' %}
+    <p>This mentor requires premium membership after approval. Complete the mock payment to unlock full chat.</p>
+  {% elif access.needs_payment and g.user.role == 'mentor' %}
+    <p>You approved this request. Chat will unlock after the mentee completes premium payment.</p>
+  {% endif %}
+</section>
+{% endif %}
+<section class="chat-page-grid">
+  <aside class="chat-sidebar glass-panel"><h3>Conversation details</h3><p class="sidebar-copy">Mentorship chat is available only after request approval and premium payment when applicable.</p><div class="tag-row stacked"><span class="status-badge {{ access.mentor.membership_type }}">{{ access.mentor.membership_type|title }}</span><span class="status-badge {{ access.status }}">{{ access.label }}</span></div></aside>
+  <div class="chat-main glass-panel">
+    <div class="chat-messages" id="chat-messages">
+      {% if messages %}
+        {% for message in messages %}
+          <article class="message-bubble {% if message.sender_id == g.user.id %}outgoing{% else %}incoming{% endif %}">
+            {% if message.body %}<p>{{ message.body }}</p>{% endif %}
+            {% if message.attachment_path %}<p><a class="text-link" href="{{ url_for('uploaded_file', filename=message.attachment_path) }}">Download: {{ message.attachment_name }}</a></p>{% endif %}
+            <span>{{ message.created_at.replace('T', ' ') }}</span>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="empty-chat"><h3>No messages yet</h3><p>Once access is unlocked, you can start your mentorship conversation here.</p></div>
+      {% endif %}
+    </div>
+    {% if access.can_chat %}
+    <form class="chat-composer" method="post" enctype="multipart/form-data">
+      <div class="attachment-row"><button class="button ghost small" type="button" id="attachment-trigger">Add Attachment</button><input type="file" id="attachment-input" name="attachment" hidden><span id="attachment-name" class="field-help">No file selected</span></div>
+      <div class="composer-row"><textarea name="body" rows="3" placeholder="Write your message here"></textarea><button class="button" type="submit">Send</button></div>
+    </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Register | MentorLink{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-intro">
+    <span class="eyebrow-pill">Create your account</span>
+    <h1>Join MentorLink as a mentor or mentee.</h1>
+    <p>Build a complete profile so the platform can create more relevant matches and more useful conversations.</p>
+    <div class="helper-card glass-panel">
+      <h3>Tips for a better profile</h3>
+      <ul class="check-list compact">
+        <li>Use clear skill names and interests</li>
+        <li>Describe goals or mentoring focus</li>
+        <li>Add a short headline others understand quickly</li>
+      </ul>
+    </div>
+  </div>
+  <form class="auth-card auth-card-wide glass-panel" method="post" enctype="multipart/form-data" novalidate>
+    <div class="form-heading"><h2>Registration Form</h2><p>All core fields still work with the existing Flask backend.</p></div>
+    <section class="form-section">
+      <div class="section-title-row"><h3>Basic Info</h3><span class="section-badge">Required</span></div>
+      <div class="form-grid two-col">
+        <div><label class="field-label">Full Name</label><div class="input-shell"><span class="input-icon">U</span><input type="text" name="name" placeholder="Enter your full name" required></div><p class="field-help">Use your real name for professional communication.</p></div>
+        <div><label class="field-label">Email Address</label><div class="input-shell"><span class="input-icon">@</span><input type="email" name="email" placeholder="name@example.com" required></div><p class="field-help">This will be used for login.</p></div>
+        <div><label class="field-label">Role</label><div class="input-shell no-icon"><select name="role" id="role-select" required><option value="mentee">Mentee</option><option value="mentor">Mentor</option></select></div><p class="field-help">Choose whether you want guidance or want to mentor others.</p><p class="field-help">If you select Mentor, membership type, amount, expertise, and mentor details will appear below.</p></div>
+        <div><label class="field-label">Password</label><div class="input-shell password-shell"><span class="input-icon">*</span><input id="register-password" type="password" name="password" placeholder="Create a secure password" required><button class="text-button password-toggle" type="button" data-toggle-password="#register-password">Show</button></div><p class="field-help">Use at least 8 characters.</p></div>
+        <div class="col-span-2"><label class="field-label">Profile Image</label><div class="input-shell no-icon"><input type="file" name="profile_image" accept="image/*"></div><p class="field-help">Optional image for your profile card.</p></div>
+        <div class="col-span-2 form-section" data-role-section="mentor-membership" id="mentor-membership-section">
+          <div class="section-title-row"><h3>Membership</h3><span class="section-badge">Mentor Plan</span></div>
+          <div class="form-grid two-col">
+            <div><label class="field-label">Membership Type</label><div class="input-shell no-icon"><select name="membership_type" id="membership-type"><option value="free">Free</option><option value="premium">Premium / Paid</option></select></div></div>
+            <div data-membership-price><label class="field-label">Amount (Rs.)</label><div class="input-shell no-icon"><input type="number" min="0" name="price" value="0" placeholder="Enter amount"></div></div>
+            <div class="col-span-2"><label class="field-label">Membership Description</label><div class="input-shell textarea-shell no-icon"><textarea name="membership_description" rows="3" placeholder="Describe what mentees get from your mentorship plan."></textarea></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="form-section">
+      <div class="section-title-row"><h3>Profile Info</h3><span class="section-badge">Recommended</span></div>
+      <div class="form-grid two-col">
+        <div class="col-span-2"><label class="field-label">Headline</label><div class="input-shell"><span class="input-icon">H</span><input type="text" name="headline" placeholder="Example: Backend mentor for Python and Flask projects"></div></div>
+        <div class="col-span-2"><label class="field-label">Bio</label><div class="input-shell textarea-shell no-icon"><textarea name="bio" rows="4" placeholder="Tell others about your background, interests, and what kind of guidance you want to offer or receive."></textarea></div></div>
+      </div>
+    </section>
+    <section class="form-section" data-role-section="mentor">
+      <div class="section-title-row"><h3>Skills & Interests</h3><span class="section-badge">Mentor Focus</span></div>
+      <div class="form-grid two-col">
+        <div><label class="field-label">Skills / Expertise</label><div class="input-shell textarea-shell no-icon"><textarea name="skills" rows="4" placeholder="Python, Flask, DSA, career guidance, interview prep"></textarea></div></div>
+        <div><label class="field-label">Experience</label><div class="input-shell textarea-shell no-icon"><textarea name="experience" rows="4" placeholder="Years of mentoring, project experience, domain background"></textarea></div></div>
+      </div>
+    </section>
+    <section class="form-section" data-role-section="mentee">
+      <div class="section-title-row"><h3>Skills & Interests</h3><span class="section-badge">Mentee Focus</span></div>
+      <div class="form-grid two-col">
+        <div><label class="field-label">Interests</label><div class="input-shell textarea-shell no-icon"><textarea name="interests" rows="4" placeholder="Web development, machine learning, internships, resume review"></textarea></div></div>
+        <div><label class="field-label">Goals</label><div class="input-shell textarea-shell no-icon"><textarea name="goals" rows="4" placeholder="Build projects, improve coding skills, find the right mentor"></textarea></div></div>
+      </div>
+    </section>
+    <div class="info-banner">Fields are shown based on the selected role for better clarity. Mentor accounts can choose free or paid membership and set a profile image.</div>
+    <button class="button full-width" type="submit">Create Account</button>
+  </form>
+</section>
+{% endblock %}

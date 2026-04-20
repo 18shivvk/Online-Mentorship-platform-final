@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Payment | MentorLink{% endblock %}
+{% block content %}
+<section class="auth-shell auth-shell-compact">
+  <div class="auth-intro">
+    <span class="eyebrow-pill">Premium mentorship</span>
+    <h1>Unlock premium mentor access.</h1>
+    <p>Complete this mock payment to unlock full chat access with your selected mentor.</p>
+  </div>
+  <form class="auth-card glass-panel" method="post">
+    <div class="form-heading"><h2>{{ mentor.name }}</h2><p>{{ mentor.membership_description or 'Premium mentorship access.' }}</p></div>
+    <div class="info-banner">Membership: {{ mentor.membership_type|title }} | Amount: Rs. {{ mentor.price }}</div>
+    <section class="form-section">
+      <div class="section-title-row"><h3>What you get</h3><span class="status-badge premium">Premium</span></div>
+      <ul class="check-list compact"><li>Chat unlocked after payment</li><li>Structured mentorship with premium mentor</li><li>Access to mentor guidance in one-to-one conversation</li></ul>
+    </section>
+    <section class="form-section">
+      <div class="section-title-row"><h3>Card Payment</h3><span class="section-badge">Mock</span></div>
+      <div class="form-grid two-col">
+        <div class="col-span-2"><label class="field-label">Cardholder Name</label><div class="input-shell"><input type="text" name="cardholder_name" placeholder="Enter cardholder name"></div></div>
+        <div class="col-span-2"><label class="field-label">Card Number</label><div class="input-shell"><input type="text" name="card_number" placeholder="1234 5678 9012 3456"></div></div>
+        <div><label class="field-label">Expiry</label><div class="input-shell"><input type="text" name="expiry" placeholder="MM/YY"></div></div>
+        <div><label class="field-label">CVV</label><div class="input-shell"><input type="password" name="cvv" placeholder="123"></div></div>
+      </div>
+    </section>
+    <section class="form-section">
+      <div class="section-title-row"><h3>OR UPI</h3><span class="section-badge">Mock</span></div>
+      <label class="field-label">UPI ID</label><div class="input-shell"><input type="text" name="upi_id" placeholder="name@upi"></div>
+    </section>
+    <button class="button full-width" type="submit">Pay Now</button>
+  </form>
+</section>
+{% endblock %}

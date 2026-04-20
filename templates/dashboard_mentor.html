@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Mentor Dashboard | MentorLink{% endblock %}
+{% block content %}
+<section class="dashboard-hero glass-panel">
+  <div><span class="eyebrow-pill">Mentor dashboard</span><h1>Manage requests, approvals, and active chats</h1><p>Review pending mentorship requests, approve or decline them, and track premium access before chat opens.</p></div>
+  <div class="quick-action-row"><a class="button ghost" href="{{ url_for('profile') }}">Edit Profile</a><a class="button" href="{{ url_for('logout') }}">Quick Logout</a></div>
+</section>
+<section class="stats-grid">
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Pending requests</span><strong class="stats-number">{{ pending_requests|length }}</strong></div><p>Waiting for your decision</p></article>
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Accepted</span><strong class="stats-number">{{ accepted_requests|length }}</strong></div><p>Approved mentorship requests</p></article>
+  <article class="stats-card glass-panel"><div class="stats-head"><span class="stats-label">Messages</span><strong class="stats-number">{{ total_messages }}</strong></div><p>Total messages exchanged</p></article>
+</section>
+<section class="panel-card glass-panel mentor-profile-panel">
+  <div class="panel-header"><h2>Your mentor profile</h2><a class="text-link" href="{{ url_for('profile') }}">Edit</a></div>
+  <div class="mentor-profile-layout">
+    <div class="profile-avatar large-avatar mentor-dashboard-avatar">
+      {% if g.user.profile_image_path %}
+        <img src="{{ url_for('profile_media', filename=g.user.profile_image_path) }}" alt="{{ g.user.name }}">
+      {% else %}
+        <span>{{ g.user.name[:1] }}</span>
+      {% endif %}
+    </div>
+    <div class="info-grid">
+      <p><strong>Headline</strong><span>{{ g.user.headline or 'Add a headline to improve discoverability.' }}</span></p>
+      <p><strong>Skills</strong><span>{{ g.user.skills or 'Add your expertise areas.' }}</span></p>
+      <p><strong>Experience</strong><span>{{ g.user.experience or 'Add mentoring background.' }}</span></p>
+      <p><strong>Membership</strong><span>{{ g.user.membership_type|title }}{% if g.user.membership_type == 'premium' %} - Rs. {{ g.user.price }}{% endif %}</span></p>
+    </div>
+  </div>
+</section>
+<section class="dashboard-grid">
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Pending Requests</h2><span class="status-badge pending">Pending</span></div>{% if pending_requests %}<div class="request-list">{% for req in pending_requests %}<div class="request-card"><div class="request-head"><div><strong>{{ req.mentee_name }}</strong><span>{{ req.topic }}</span></div><span class="field-help">{{ req.created_at.replace('T', ' ') }}</span></div><p>{{ req.request_message }}</p><div class="request-actions"><form method="post" action="{{ url_for('accept_request', request_id=req.id) }}"><button class="button small" type="submit">Accept</button></form><form method="post" action="{{ url_for('decline_request', request_id=req.id) }}"><button class="button ghost small" type="submit">Decline</button></form></div></div>{% endfor %}</div>{% else %}<p class="empty-state">No pending requests right now.</p>{% endif %}</article>
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Quick actions</h2><span class="section-badge">Ready</span></div><div class="quick-actions-stack"><a class="action-tile" href="{{ url_for('profile') }}"><strong>Update mentor profile</strong><span>Improve discoverability for mentees</span></a><a class="action-tile" href="{{ url_for('dashboard') }}"><strong>Refresh dashboard</strong><span>Review latest request activity</span></a><a class="action-tile" href="{{ url_for('logout') }}"><strong>End session</strong><span>Sign out securely</span></a></div></article>
+</section>
+<section class="dashboard-grid">
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Accepted Requests</h2><span class="status-badge accepted">Accepted</span></div>{% if accepted_requests %}<div class="request-list">{% for req in accepted_requests %}<div class="request-card"><div class="request-head"><div><strong>{{ req.mentee_name }}</strong><span>{{ req.topic }}</span></div><span class="status-badge {% if g.user.membership_type == 'premium' and not req.payment_status %}payment_required{% else %}accepted{% endif %}">{% if g.user.membership_type == 'premium' and not req.payment_status %}Awaiting Payment{% else %}Chat Ready{% endif %}</span></div><p>{{ req.request_message }}</p><a class="text-link" href="{{ url_for('chat', partner_id=req.mentee_id) }}">Open Chat</a></div>{% endfor %}</div>{% else %}<p class="empty-state">No accepted requests yet.</p>{% endif %}</article>
+  <article class="panel-card glass-panel"><div class="panel-header"><h2>Declined Requests</h2><span class="status-badge declined">Declined</span></div>{% if declined_requests %}<div class="request-list">{% for req in declined_requests %}<div class="request-card"><div class="request-head"><div><strong>{{ req.mentee_name }}</strong><span>{{ req.topic }}</span></div><span class="field-help">{{ req.created_at.replace('T', ' ') }}</span></div><p>{{ req.request_message }}</p></div>{% endfor %}</div>{% else %}<p class="empty-state">No declined requests.</p>{% endif %}</article>
+</section>
+{% endblock %}
